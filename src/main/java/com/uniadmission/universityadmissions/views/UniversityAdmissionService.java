@@ -27,48 +27,80 @@ public class UniversityAdmissionService implements AdmissionService {
     }
 
     public List<AdmissionDTO> getAllAdmissions(){
+        StringBuilder log = new StringBuilder("ALL ADMISSIONS FETCHED :-> ");
         List<AdmissionEntity> admissions = admissionRepository.findAll();
         List<AdmissionDTO> response = new ArrayList<>();
         for (AdmissionEntity admission : admissions) {
             response.add(modelMapper.map(admission, AdmissionDTO.class));
         }
+        AdmissionLogger.logInfo(log.toString());
         return response;
     }
 
     public AdmissionDTO getAdmissionById(Long id) throws NoAdmissionFoundException {
+        StringBuilder log = new StringBuilder("ADMISSION FETCHED :-> ");
         AdmissionEntity admission = admissionRepository.getByAdmissionID(id);
         if (admission == null) {
+            log.append("NO SUCH ADMISSION WITH ID "+id);
             throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID "+id+".");
         }
+        AdmissionLogger.logInfo(log.toString());
         return modelMapper.map(admission, AdmissionDTO.class);
     }
 
     public AdmissionDTO createAdmission(CreateAdmissionDTO createAdmissionDTO) throws BadRequestException {
+        StringBuilder log = new StringBuilder("ADMISSION CREATED :-> ");
         if(createAdmissionDTO.getApplicant() == null || createAdmissionDTO.getProgram() == null) {
+            log.append("BAD REQUEST :-> ");
             StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
-            if(createAdmissionDTO.getApplicant() == null) message.append(" APPLICANT NOT FOUND ");
-            if (createAdmissionDTO.getProgram() == null) message.append(" PROGRAM NOT FOUND ");
+            if(createAdmissionDTO.getApplicant() == null) {
+                log.append(" APPLICANT NOT FOUND ");
+                message.append(" APPLICANT NOT FOUND ");
+            }
+            if (createAdmissionDTO.getProgram() == null) {
+                log.append(" PROGRAM NOT FOUND ");
+                message.append(" PROGRAM NOT FOUND ");
+            }
+            AdmissionLogger.logError(log.toString());
             throw new BadRequestException(message.toString());
         }
+
         AdmissionEntity admission = new AdmissionEntity(createAdmissionDTO);
+        log.append("APPLICANT : "+createAdmissionDTO.getApplicant().getApplicantID());
         System.out.println(createAdmissionDTO.getApplicant());
         admission = admissionRepository.save(admission);
+        AdmissionLogger.logSuccess(log.toString());
         return modelMapper.map(admission, AdmissionDTO.class);
     }
 
     public AdmissionDTO updateAdmission(Long admissionID, UpdateAdmissionDTO updateAdmissionDTO) throws BadRequestException{
+        StringBuilder log = new StringBuilder("ADMISSION UPDATED :-> ");
         if (admissionID == null || updateAdmissionDTO.getProgram() == null) {
+            log.append("BAD REQUEST :-> ");
             StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
-            if (admissionID == null) message.append(" ADMISSION ID NOT FOUND ");
-            if (updateAdmissionDTO.getProgram() == null) message.append(" PROGRAM ID NOT FOUND");
+            if (admissionID == null) {
+                log.append(" ADMISSION ID NOT FOUND ");
+                message.append(" ADMISSION ID NOT FOUND ");
+            }
+            if (updateAdmissionDTO.getProgram() == null) {
+                log.append(" PROGRAM ID NOT FOUND ");
+                message.append(" PROGRAM ID NOT FOUND");
+            }
+            AdmissionLogger.logError(log.toString());
             throw new BadRequestException(message.toString());
         }
         AdmissionDTO admission = new AdmissionDTO();
+        log.append("ADMISSION ID : "+admissionID);
         AdmissionEntity currentAdmission = modelMapper.map(getAdmissionById(admissionID), AdmissionEntity.class);
+        log.append("PROGRAM : "+updateAdmissionDTO.getProgram().getProgramID());
         if(updateAdmissionDTO.getProgram() != null) {
+            log.append("PROGRAM : "+updateAdmissionDTO.getProgramID());
             currentAdmission.setProgram(updateAdmissionDTO.getProgram());
+        }else {
+            log.append("PROGRAM NOT FOUND ");
         }
         currentAdmission = admissionRepository.save(currentAdmission);
+        log.append("ADMISSION UPDATED ");
         return modelMapper.map(currentAdmission, AdmissionDTO.class);
     }
 
