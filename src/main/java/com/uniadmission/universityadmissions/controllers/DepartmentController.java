@@ -4,16 +4,16 @@ import java.util.*;
 import com.uniadmission.universityadmissions.models.DTO.department.CreateDepartmentDTO;
 import com.uniadmission.universityadmissions.models.DTO.department.DepartmentDTO;
 import com.uniadmission.universityadmissions.models.DTO.department.UpdateDepartmentDTO;
-import com.uniadmission.universityadmissions.views.DepartmentService;
+import com.uniadmission.universityadmissions.views.UniversityDepartmentService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v0/department")
 public class DepartmentController {
 
-    private final DepartmentService departmentService;
+    private final UniversityDepartmentService departmentService;
 
-    public DepartmentController(DepartmentService departmentService) {
+    public DepartmentController(UniversityDepartmentService departmentService) {
         this.departmentService = departmentService;
     }
 
