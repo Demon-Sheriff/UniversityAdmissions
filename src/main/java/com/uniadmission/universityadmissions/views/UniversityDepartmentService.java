@@ -35,7 +35,14 @@ public class UniversityDepartmentService implements DepartmentService {
 	}
 
 	public DepartmentDTO getDepartmentByID(Long departmentID) throws NoDepartmentFoundException {
+
 		StringBuilder log = new StringBuilder("DEPARTMENT FETCHED :-> ");
+
+		if (departmentID == null) {
+			log.append("BAD REQUEST :-> DEPARTMENT ID NOT FOUND ");
+			AdmissionLogger.logError(log.toString());
+			throw new BadRequestException("BAD REQUEST :-> DEPARTMENT ID NOT FOUND");
+		}
 		DepartmentEntity department = departmentRepository.findByDepartmentID(departmentID);
 		if (department == null) {
 			log.append("NO SUCH DEPARTMENT WITH ID ").append(departmentID);
@@ -71,8 +78,14 @@ public class UniversityDepartmentService implements DepartmentService {
 	public DepartmentDTO updateDepartment(Long departmentID, UpdateDepartmentDTO updateDepartmentDTO)
 			throws BadRequestException {
 		// DepartmentDTO department = new DepartmentDTO();
+		StringBuilder log = new StringBuilder();
+		if(departmentID == null){
+			log.append("BAD REQUEST :-> DEPARTMENT ID NOT FOUND ");
+			AdmissionLogger.logError(log.toString());
+			throw new BadRequestException("BAD REQUEST :-> DEPARTMENT ID NOT FOUND");
+		}
 		DepartmentEntity currentDepartment = modelMapper.map(getDepartmentByID(departmentID), DepartmentEntity.class);
-		StringBuilder log = new StringBuilder("DEPARTMENT UPDATED :-> ");
+		log.append("DEPARTMENT UPDATED :-> ");
 		if (updateDepartmentDTO.getName() != null) {
 			log.append("NAME UPDATED TO ").append(updateDepartmentDTO.getName());
 			currentDepartment.setName(updateDepartmentDTO.getName());
@@ -84,7 +97,7 @@ public class UniversityDepartmentService implements DepartmentService {
 			log.append("DESCRIPTION UPDATED TO ").append(updateDepartmentDTO.getDescription());
 			currentDepartment.setDescription(updateDepartmentDTO.getDescription());
 		}
-		else {
+		else { // if it is null
 			log.append("DESCRIPTION NOT UPDATED ");
 		}
 		currentDepartment = departmentRepository.save(currentDepartment);
