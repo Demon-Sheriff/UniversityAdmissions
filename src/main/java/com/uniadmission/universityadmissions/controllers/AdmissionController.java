@@ -4,7 +4,7 @@ import com.uniadmission.universityadmissions.models.DTO.admission.AdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.CreateAdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionStatusDTO;
-import com.uniadmission.universityadmissions.views.UniversityAdmissionService;
+import com.uniadmission.universityadmissions.views.AdmissionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 @RequestMapping("/api/v0/admissions")
 public class AdmissionController {
 
-    private final UniversityAdmissionService admissionService;
+    private final AdmissionService admissionService;
 
-    public AdmissionController(UniversityAdmissionService admissionService) {
+    public AdmissionController(AdmissionService admissionService) {
         this.admissionService = admissionService;
     }
 
