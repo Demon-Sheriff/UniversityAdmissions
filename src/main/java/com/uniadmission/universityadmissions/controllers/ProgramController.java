@@ -3,6 +3,7 @@ package com.uniadmission.universityadmissions.controllers;
 import com.uniadmission.universityadmissions.exceptions.NoProgramFoundException;
 import com.uniadmission.universityadmissions.models.DTO.program.CreateProgramDTO;
 import com.uniadmission.universityadmissions.models.DTO.program.ProgramDTO;
+import com.uniadmission.universityadmissions.models.DTO.program.UpdateProgramDTO;
 import com.uniadmission.universityadmissions.models.ProgramEntity;
 import com.uniadmission.universityadmissions.views.ProgramService;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,14 @@ public class ProgramController {
         this.programService = programService;
     }
     @GetMapping("")
-    public List<ProgramDTO> getAllPrograms(){
-        return programService.getAllPrograms();
+    public List<ProgramDTO> getAllPrograms(
+            @RequestParam(name = "department", defaultValue = "-1") Long departmentID
+    ){
+        Long department = -1L;
+        if(departmentID != null) {
+            department = departmentID;
+        }
+        return programService.getAllPrograms(department);
     }
 
     @GetMapping("/{programID}")
@@ -27,14 +34,15 @@ public class ProgramController {
         return programService.getProgramById(programID);
     }
 
+
     @PostMapping("")
     public ProgramDTO createProgram(@RequestBody CreateProgramDTO createProgramDTO) {
         return programService.createProgram(createProgramDTO);
     }
 
-    @PostMapping("/{programID}")
-    public ProgramDTO updateProgram(@PathVariable Long programID, @RequestBody CreateProgramDTO createProgramDTO) {
-        return programService.updateProgram(programID, createProgramDTO);
+    @PutMapping("/{programID}")
+    public ProgramDTO updateProgram(@PathVariable Long programID, @RequestBody UpdateProgramDTO updateProgramDTO) throws NoProgramFoundException {
+        return programService.updateProgram(programID, updateProgramDTO);
     }
 
     @DeleteMapping("/{programID}")
