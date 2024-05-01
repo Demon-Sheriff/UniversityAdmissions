@@ -52,13 +52,6 @@ public class DepartmentService {
     }
 
     public DepartmentDTO updateDepartment(Long departmentID, UpdateDepartmentDTO updateDepartmentDTO) throws BadRequestException {
-        if(departmentID == null || updateDepartmentDTO.getName() == null || updateDepartmentDTO.getDescription() == null) {
-            StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
-            if(departmentID == null) message.append(" DEPARTMENT ID NOT FOUND ");
-            if(updateDepartmentDTO.getName() == null) message.append(" DEPARTMENT NAME NOT FOUND ");
-            if(updateDepartmentDTO.getDescription() == null) message.append(" DEPARTMENT DESCRIPTION NOT FOUND ");
-            throw new BadRequestException(message.toString());
-        }
         // DepartmentDTO department = new DepartmentDTO();
         DepartmentEntity currentDepartment = modelMapper.map(getDepartmentByID(departmentID), DepartmentEntity.class);
         if(updateDepartmentDTO.getName() != null) {

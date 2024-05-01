@@ -1,7 +1,6 @@
 package com.uniadmission.universityadmissions.controllers;
 import java.util.*;
 
-import com.uniadmission.universityadmissions.models.DTO.admission.AdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.department.CreateDepartmentDTO;
 import com.uniadmission.universityadmissions.models.DTO.department.DepartmentDTO;
 import com.uniadmission.universityadmissions.models.DTO.department.UpdateDepartmentDTO;
