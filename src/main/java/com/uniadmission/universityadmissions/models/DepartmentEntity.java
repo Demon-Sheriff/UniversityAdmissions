@@ -1,5 +1,6 @@
 package com.uniadmission.universityadmissions.models;
 
+import com.uniadmission.universityadmissions.models.DTO.department.CreateDepartmentDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +23,9 @@ public class DepartmentEntity {
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    public DepartmentEntity(CreateDepartmentDTO createDepartmentDTO) {
+        this.setName(createDepartmentDTO.getName());
+        this.setDescription(createDepartmentDTO.getDescription());
+    }
 }
