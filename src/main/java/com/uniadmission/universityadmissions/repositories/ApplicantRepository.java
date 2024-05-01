@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ApplicantRepository extends JpaRepository<ApplicantEntity, Integer> {
 
-    ApplicantEntity findByApplicantID(Long applicantID);
+    ApplicantEntity getByApplicantID(Long applicantID);
 }
