@@ -5,6 +5,7 @@ import com.uniadmission.universityadmissions.exceptions.admissionExceptions.NoAd
 import com.uniadmission.universityadmissions.exceptions.applicantExceptions.NoApplicantFoundException;
 import com.uniadmission.universityadmissions.models.AdmissionEntity;
 import com.uniadmission.universityadmissions.models.ApplicantEntity;
+import com.uniadmission.universityadmissions.models.CustomStatus.AppplicationStatus;
 import com.uniadmission.universityadmissions.models.DTO.admission.AdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.CreateAdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionDTO;
@@ -16,6 +17,7 @@ import com.uniadmission.universityadmissions.models.DTO.applicant.UpdateApplican
 import com.uniadmission.universityadmissions.repositories.ApplicantRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,9 +43,16 @@ public class ApplicantService {
     public ApplicantDTO getApplicantById(Long id) throws NoApplicantFoundException {
         ApplicantEntity applicant = applicantRepository.getByApplicantID(id);
         if(applicant==null) {
-            throw new NoApplicantFoundException("NO SUCH APPLICANT WITH ID"+id+".");
+            throw new NoApplicantFoundException("NO SUCH APPLICANT WITH ID "+id+".");
         }
         return modelMapper.map(applicant,ApplicantDTO.class);
+    }
+
+    public AppplicationStatus getApplicantStatusById(Long id) {
+        if (id == null) throw new BadRequestException("BAD REQUEST :-> APPLICANT ID NOT FOUND");
+        ApplicantEntity applicant = modelMapper.map(getApplicantById(id), ApplicantEntity.class);
+        if(applicant == null) throw new NoApplicantFoundException("NO SUCH APPLICANT WITH ID "+id);
+        return applicant.getAppplicationStatus();
     }
 
 
@@ -51,16 +60,16 @@ public class ApplicantService {
         if(createApplicantDTO.getName()==null || createApplicantDTO.getDateOfBirth()==null || createApplicantDTO.getEmail()==null || createApplicantDTO.getAddress()==null) {
             StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
             if(createApplicantDTO.getName()==null) {
-                message.append("APPLICANT NAME NOT FOUND ");
+                message.append(" APPLICANT NAME NOT FOUND ");
             }
             if(createApplicantDTO.getDateOfBirth()==null) {
-                message.append("APPLICANT DATE OF BIRTH NOT FOUND ");
+                message.append(" APPLICANT DATE OF BIRTH NOT FOUND ");
             }
             if(createApplicantDTO.getEmail()==null) {
-                message.append("APPLICANT EMAIL NOT FOUND ");
+                message.append(" APPLICANT EMAIL NOT FOUND ");
             }
             if(createApplicantDTO.getAddress()==null) {
-                message.append("APPLICANT ADDRESS NOT FOUND");
+                message.append(" APPLICANT ADDRESS NOT FOUND ");
             }
             throw new BadRequestException(message.toString());
         }

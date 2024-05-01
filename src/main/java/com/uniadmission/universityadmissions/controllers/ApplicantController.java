@@ -1,5 +1,6 @@
 package com.uniadmission.universityadmissions.controllers;
 
+import com.uniadmission.universityadmissions.models.CustomStatus.AppplicationStatus;
 import com.uniadmission.universityadmissions.models.DTO.admission.AdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.CreateAdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionDTO;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v0/applicant")
+@RequestMapping("/api/v0/applicants")
 public class ApplicantController {
     private final ApplicantService applicantService;
 
@@ -33,8 +34,14 @@ public class ApplicantController {
         return applicantService.getApplicantById(applicantID);
     }
 
+    @GetMapping("/{applicantID}/status")
+    public AppplicationStatus getApplicantStatusById(@PathVariable Long applicantID) {
+        return applicantService.getApplicantStatusById(applicantID);
+    }
+
     @PostMapping("")
     public ApplicantDTO createApplicant(@RequestBody CreateApplicantDTO createApplicantDTO) {
+        System.out.println(createApplicantDTO.getDateOfBirth().getClass());
         return applicantService.createApplicant(createApplicantDTO);
     }
 

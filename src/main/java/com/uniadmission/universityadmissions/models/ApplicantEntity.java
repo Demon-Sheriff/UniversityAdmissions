@@ -43,6 +43,7 @@ public class ApplicantEntity {
 		this.setEmail(createApplicantDTO.getEmail());
 		this.setAddress(createApplicantDTO.getAddress());
 		this.setDateOfBirth(createApplicantDTO.getDateOfBirth());
+		this.setAppplicationStatus(AppplicationStatus.PENDING);
 	}
 
 }
