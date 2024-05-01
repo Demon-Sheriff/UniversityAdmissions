@@ -4,8 +4,7 @@ import com.uniadmission.universityadmissions.exceptions.NoProgramFoundException;
 import com.uniadmission.universityadmissions.models.DTO.program.CreateProgramDTO;
 import com.uniadmission.universityadmissions.models.DTO.program.ProgramDTO;
 import com.uniadmission.universityadmissions.models.DTO.program.UpdateProgramDTO;
-import com.uniadmission.universityadmissions.models.ProgramEntity;
-import com.uniadmission.universityadmissions.views.ProgramService;
+import com.uniadmission.universityadmissions.views.UniversityProgramService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v0/program")
 public class ProgramController {
-    private final ProgramService programService;
+    private final UniversityProgramService programService;
 
-    public ProgramController(ProgramService programService) {
+    public ProgramController(UniversityProgramService programService) {
         this.programService = programService;
     }
     @GetMapping("")

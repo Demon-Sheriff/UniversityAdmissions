@@ -1,16 +1,11 @@
 package com.uniadmission.universityadmissions.controllers;
 
 import com.uniadmission.universityadmissions.models.CustomStatus.AppplicationStatus;
-import com.uniadmission.universityadmissions.models.DTO.admission.AdmissionDTO;
-import com.uniadmission.universityadmissions.models.DTO.admission.CreateAdmissionDTO;
-import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionDTO;
-import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionStatusDTO;
 import com.uniadmission.universityadmissions.models.DTO.applicant.ApplicantDTO;
 import com.uniadmission.universityadmissions.models.DTO.applicant.CreateApplicantDTO;
 import com.uniadmission.universityadmissions.models.DTO.applicant.UpdateApplicantAdmissionStatusDTO;
 import com.uniadmission.universityadmissions.models.DTO.applicant.UpdateApplicantDTO;
-import com.uniadmission.universityadmissions.views.AdmissionService;
-import com.uniadmission.universityadmissions.views.ApplicantService;
+import com.uniadmission.universityadmissions.views.UniversityApplicantService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +13,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v0/applicants")
 public class ApplicantController {
-    private final ApplicantService applicantService;
+    private final UniversityApplicantService applicantService;
 
-    public ApplicantController(ApplicantService applicantService) {
+    public ApplicantController(UniversityApplicantService applicantService) {
         this.applicantService = applicantService;
     }
 
