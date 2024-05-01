@@ -1,4 +1,4 @@
-package com.uniadmission.universityadmissions.exceptions;
+package com.uniadmission.universityadmissions.exceptions.admissionExceptions;
 
 public class NoAdmissionFoundException extends RuntimeException{
 
