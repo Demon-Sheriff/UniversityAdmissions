@@ -1,6 +1,9 @@
 package com.uniadmission.universityadmissions.models;
 
+import com.uniadmission.universityadmissions.models.CustomStatus.AdmissionStatus;
 import com.uniadmission.universityadmissions.models.CustomStatus.AppplicationStatus;
+import com.uniadmission.universityadmissions.models.DTO.admission.CreateAdmissionDTO;
+import com.uniadmission.universityadmissions.models.DTO.applicant.CreateApplicantDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,5 +37,12 @@ public class ApplicantEntity {
 
 	@Column(name = "applicationStatus", nullable = false)
 	private AppplicationStatus appplicationStatus;
+
+	public ApplicantEntity(CreateApplicantDTO createApplicantDTO) {
+		this.setName(createApplicantDTO.getName());
+		this.setEmail(createApplicantDTO.getEmail());
+		this.setAddress(createApplicantDTO.getAddress());
+		this.setDateOfBirth(createApplicantDTO.getDateOfBirth());
+	}
 
 }

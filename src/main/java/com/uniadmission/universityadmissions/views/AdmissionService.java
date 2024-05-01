@@ -1,7 +1,7 @@
 package com.uniadmission.universityadmissions.views;
 
 import com.uniadmission.universityadmissions.exceptions.BadRequestException;
-import com.uniadmission.universityadmissions.exceptions.NoAdmissionFoundException;
+import com.uniadmission.universityadmissions.exceptions.admissionExceptions.NoAdmissionFoundException;
 import com.uniadmission.universityadmissions.models.AdmissionEntity;
 import com.uniadmission.universityadmissions.models.DTO.admission.AdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.CreateAdmissionDTO;
@@ -38,7 +38,7 @@ public class AdmissionService {
     public AdmissionDTO getAdmissionById(Long id) throws NoAdmissionFoundException {
         AdmissionEntity admission = admissionRepository.getByAdmissionID(id);
         if (admission == null) {
-            throw new NoAdmissionFoundException("NO SUCH ADMISSION WIH ID "+id+".");
+            throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID "+id+".");
         }
         return modelMapper.map(admission, AdmissionDTO.class);
     }
@@ -76,7 +76,7 @@ public class AdmissionService {
         if(admissionID == null) throw new BadRequestException("BAD REQUEST :-> ADMISSION ID NOT FOUND");
         AdmissionDTO admissionDTO = getAdmissionById(admissionID);
         if (admissionDTO == null) {
-            throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH WITH ID "+admissionID);
+            throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID "+admissionID);
         }
         AdmissionEntity admission = modelMapper.map(admissionDTO, AdmissionEntity.class);
         admissionRepository.delete(admission);
