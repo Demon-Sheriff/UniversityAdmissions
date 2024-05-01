@@ -1,6 +1,7 @@
 package com.uniadmission.universityadmissions.models;
 
 import com.uniadmission.universityadmissions.models.CustomStatus.DegreeLevel;
+import com.uniadmission.universityadmissions.models.DTO.program.CreateProgramDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,5 +30,10 @@ public class ProgramEntity {
 
     @Column(name="duration", nullable = false)
     private int duration;
-
+    public ProgramEntity(CreateProgramDTO createProgramDTO){
+        this.setName(createProgramDTO.getName());
+        this.setDepartmentID(createProgramDTO.getDepartmentID());
+        this.setDegreeLevel(createProgramDTO.getDegreeLevel());
+        this.setDuration(createProgramDTO.getDuration());
+    }
 }
