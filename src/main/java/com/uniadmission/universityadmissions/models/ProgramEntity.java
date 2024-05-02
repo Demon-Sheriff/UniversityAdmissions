@@ -15,25 +15,28 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProgramEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long programID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "program_id")
+	private Long programID;
 
-    @Column(name="name", nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @Column(name="department", nullable = false)
-    private long departmentID;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "department_id", nullable = false, referencedColumnName = "department_id")
+	private DepartmentEntity department;
 
-    @Column(name="degreeLevel", nullable = false)
-    private DegreeLevel degreeLevel;
+	@Column(name = "degreeLevel", nullable = false)
+	private DegreeLevel degreeLevel;
 
-    @Column(name="duration", nullable = false)
-    private int duration;
-    public ProgramEntity(CreateProgramDTO createProgramDTO){
-        this.setName(createProgramDTO.getName());
-        this.setDepartmentID(createProgramDTO.getDepartmentID());
-        this.setDegreeLevel(createProgramDTO.getDegreeLevel());
-        this.setDuration(createProgramDTO.getDuration());
-    }
+	@Column(name = "duration", nullable = false)
+	private int duration;
+
+	public ProgramEntity(CreateProgramDTO createProgramDTO) {
+		this.setName(createProgramDTO.getName());
+		this.setDegreeLevel(createProgramDTO.getDegreeLevel());
+		this.setDuration(createProgramDTO.getDuration());
+	}
+
 }

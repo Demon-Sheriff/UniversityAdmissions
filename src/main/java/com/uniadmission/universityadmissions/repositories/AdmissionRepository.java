@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface AdmissionRepository extends JpaRepository<AdmissionEntity, Integer> {
 
-    AdmissionEntity getByAdmissionID(Long Id);
+	AdmissionEntity getByAdmissionID(Long Id);
+
 }

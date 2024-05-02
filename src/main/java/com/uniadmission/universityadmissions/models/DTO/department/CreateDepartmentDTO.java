@@ -8,8 +8,11 @@ import org.antlr.v4.runtime.misc.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateDepartmentDTO {
-    @NonNull
-    private String name;
-    @NonNull
-    private String description;
+
+	@NonNull
+	private String name;
+
+	@NonNull
+	private String description;
+
 }

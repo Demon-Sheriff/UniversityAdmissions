@@ -10,13 +10,15 @@ import java.util.List;
 
 public interface ProgramService {
 
-    List<ProgramDTO> getAllPrograms(Long department);
+	List<ProgramDTO> getAllPrograms(Long department) throws NoProgramFoundException;
 
-    ProgramDTO getProgramById(Long id) throws NoProgramFoundException;
+	ProgramDTO getProgramById(Long id) throws NoProgramFoundException;
 
-    ProgramDTO createProgram(CreateProgramDTO createProgramDTO) throws BadRequestException;
+	ProgramDTO createProgram(CreateProgramDTO createProgramDTO) throws BadRequestException, NoProgramFoundException;
 
-    ProgramDTO updateProgram(Long programID, UpdateProgramDTO updateProgramDTO) throws BadRequestException, NoProgramFoundException;
+	ProgramDTO updateProgram(Long programID, UpdateProgramDTO updateProgramDTO)
+			throws BadRequestException, NoProgramFoundException;
 
-    ProgramDTO deleteProgram(Long programID) throws NoProgramFoundException;
+	ProgramDTO deleteProgram(Long programID) throws NoProgramFoundException;
+
 }

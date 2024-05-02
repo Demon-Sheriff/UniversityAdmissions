@@ -11,16 +11,17 @@ import java.util.List;
 
 public interface ApplicantService {
 
-    List<ApplicantDTO> getAllApplicants();
+	List<ApplicantDTO> getAllApplicants();
 
-    ApplicantDTO getApplicantById(Long id) throws NoApplicantFoundException;
+	ApplicantDTO getApplicantById(Long id) throws NoApplicantFoundException;
 
-    ApplicantDTO createApplicant(CreateApplicantDTO createApplicantDTO) throws BadRequestException;
+	ApplicantDTO createApplicant(CreateApplicantDTO createApplicantDTO) throws BadRequestException;
 
-    ApplicantDTO updateApplicant(Long applicantID, UpdateApplicantDTO updateApplicantDTO) throws BadRequestException;
+	ApplicantDTO updateApplicant(Long applicantID, UpdateApplicantDTO updateApplicantDTO) throws BadRequestException;
 
-    ApplicantDTO deleteApplicant(Long applicantID) throws BadRequestException, NoApplicantFoundException;
+	ApplicantDTO deleteApplicant(Long applicantID) throws BadRequestException, NoApplicantFoundException;
 
-    ApplicantDTO updateApplicantStatus(Long applicantID, UpdateApplicantAdmissionStatusDTO updateApplicantStatusDTO) throws BadRequestException, NoApplicantFoundException;
+	ApplicantDTO updateApplicantStatus(Long applicantID, UpdateApplicantAdmissionStatusDTO updateApplicantStatusDTO)
+			throws BadRequestException, NoApplicantFoundException;
 
 }

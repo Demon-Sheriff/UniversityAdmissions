@@ -154,18 +154,4 @@ public class UniversityApplicantService implements ApplicantService{
         applicant.setAppplicationStatus(updateApplicantAdmissionStatusDTO.getAppplicationStatus());
         return modelMapper.map(applicantRepository.save(applicant), ApplicantDTO.class);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

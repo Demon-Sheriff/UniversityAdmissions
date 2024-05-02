@@ -1,12 +1,19 @@
 package com.uniadmission.universityadmissions.views;
 
 import com.uniadmission.universityadmissions.exceptions.BadRequestException;
+import com.uniadmission.universityadmissions.exceptions.NoProgramFoundException;
 import com.uniadmission.universityadmissions.exceptions.admissionExceptions.NoAdmissionFoundException;
 import com.uniadmission.universityadmissions.models.AdmissionEntity;
+import com.uniadmission.universityadmissions.models.ApplicantEntity;
+import com.uniadmission.universityadmissions.models.CustomStatus.AdmissionStatus;
+import com.uniadmission.universityadmissions.models.CustomStatus.AppplicationStatus;
 import com.uniadmission.universityadmissions.models.DTO.admission.AdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.CreateAdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionStatusDTO;
+import com.uniadmission.universityadmissions.models.DTO.applicant.ApplicantDTO;
+import com.uniadmission.universityadmissions.models.DTO.program.ProgramDTO;
+import com.uniadmission.universityadmissions.models.ProgramEntity;
 import com.uniadmission.universityadmissions.repositories.AdmissionRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -15,17 +22,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 @Service
 public class UniversityAdmissionService implements AdmissionService {
 
     private final AdmissionRepository admissionRepository;
-    private final ModelMapper modelMapper;
-    UniversityAdmissionService(AdmissionRepository admissionRepository) {
-        this.admissionRepository = admissionRepository;
-        this.modelMapper = new ModelMapper();
-    }
 
+    private final ProgramService programService;
+
+    private final ApplicantService applicantService;
+
+    private final ModelMapper modelMapper;
+
+    UniversityAdmissionService(AdmissionRepository admissionRepository, ProgramService programService,
+        ApplicantService applicantService) {
+      this.admissionRepository = admissionRepository;
+      this.programService = programService;
+      this.applicantService = applicantService;
+      this.modelMapper = new ModelMapper();
+    }
     public List<AdmissionDTO> getAllAdmissions(){
         StringBuilder log = new StringBuilder("ALL ADMISSIONS FETCHED :-> ");
         List<AdmissionEntity> admissions = admissionRepository.findAll();
@@ -104,26 +118,41 @@ public class UniversityAdmissionService implements AdmissionService {
         return modelMapper.map(currentAdmission, AdmissionDTO.class);
     }
 
-    public AdmissionDTO deleteAdmission(Long admissionID) throws BadRequestException, NoAdmissionFoundException {
-        if(admissionID == null) throw new BadRequestException("BAD REQUEST :-> ADMISSION ID NOT FOUND");
-        AdmissionDTO admissionDTO = getAdmissionById(admissionID);
-        if (admissionDTO == null) {
-            throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID "+admissionID);
-        }
-        AdmissionEntity admission = modelMapper.map(admissionDTO, AdmissionEntity.class);
-        admissionRepository.delete(admission);
-        return modelMapper.map(admission, AdmissionDTO.class);
-    }
+	public AdmissionDTO deleteAdmission(Long admissionID) throws BadRequestException, NoAdmissionFoundException {
+		if (admissionID == null)
+			throw new BadRequestException("BAD REQUEST :-> ADMISSION ID NOT FOUND");
+		AdmissionDTO admissionDTO = getAdmissionById(admissionID);
+		if (admissionDTO == null) {
+			throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID " + admissionID);
+		}
+		AdmissionEntity admission = modelMapper.map(admissionDTO, AdmissionEntity.class);
+		admissionRepository.delete(admission);
+		return modelMapper.map(admission, AdmissionDTO.class);
+	}
 
-    public AdmissionDTO updateAdmissionStatus(Long admissionID, UpdateAdmissionStatusDTO updateAdmissionStatusDTO) throws BadRequestException, NoAdmissionFoundException {
-        if (admissionID == null) throw new BadRequestException("BAD REQUEST :-> ADMISSION ID NOT FOUND");
-        if(updateAdmissionStatusDTO.getAdmissionStatus() == null) throw new BadRequestException("BAD REQUEST :-> ADMISSION STATUS NOT FOUND");
-        AdmissionDTO admissionDTO = getAdmissionById(admissionID);
-        if (admissionDTO == null) throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID "+admissionID);
-        AdmissionEntity admission = modelMapper.map(admissionDTO, AdmissionEntity.class);
-        admission.setAdmissionStatus(updateAdmissionStatusDTO.getAdmissionStatus());
-        admission.setDecisionDate(new Date());
-        return modelMapper.map(admissionRepository.save(admission), AdmissionDTO.class);
-    }
+	public AdmissionDTO updateAdmissionStatus(Long admissionID, UpdateAdmissionStatusDTO updateAdmissionStatusDTO)
+			throws BadRequestException, NoAdmissionFoundException {
+		if (admissionID == null)
+			throw new BadRequestException("BAD REQUEST :-> ADMISSION ID NOT FOUND");
+		if (updateAdmissionStatusDTO.getAdmissionStatus() == null)
+			throw new BadRequestException("BAD REQUEST :-> ADMISSION STATUS NOT FOUND");
+		AdmissionDTO admissionDTO = getAdmissionById(admissionID);
+		if (admissionDTO == null)
+			throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID " + admissionID);
+		AdmissionEntity admission = modelMapper.map(admissionDTO, AdmissionEntity.class);
+		admission.setAdmissionStatus(updateAdmissionStatusDTO.getAdmissionStatus());
+		admission.setDecisionDate(new Date());
+		ApplicantEntity applicant = admission.getApplicant();
+		if (updateAdmissionStatusDTO.getAdmissionStatus().equals(AdmissionStatus.ACCEPTED)) {
+			applicant.setAppplicationStatus(AppplicationStatus.ACCEPTED);
+		}
+		if (updateAdmissionStatusDTO.getAdmissionStatus().equals(AdmissionStatus.PENDING)) {
+			applicant.setAppplicationStatus(AppplicationStatus.UNDER_REVIEW);
+		}
+		if (updateAdmissionStatusDTO.getAdmissionStatus().equals(AdmissionStatus.WAITLISTED)) {
+			applicant.setAppplicationStatus(AppplicationStatus.WAITLISTED);
+		}
+		return modelMapper.map(admissionRepository.save(admission), AdmissionDTO.class);
+	}
 
 }
