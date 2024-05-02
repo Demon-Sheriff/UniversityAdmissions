@@ -30,12 +30,19 @@ public class UniversityProgramService implements ProgramService {
       this.modelMapper = new ModelMapper();
     }
   
-    public List<ProgramDTO> getAllPrograms(Long department){
+    public List<ProgramDTO> getAllPrograms(Long department) throws NoProgramFoundException {
         StringBuilder log = new StringBuilder("");
         log.append("ALL PROGRAMS FETCHED :-> ");
         if(department != -1) {
-            log.append("ALL PROGRAMS FETCHED FOR DEPARTMENT ID "+department+" :-> ")
-            List<ProgramEntity> programs = programRepository.findByDepartmentID(department);
+            log.append("ALL PROGRAMS FETCHED FOR DEPARTMENT ID "+department+" :-> ");
+            DepartmentDTO departmentDTO = departmentService.getDepartmentByID(department);
+            if (departmentDTO == null) {
+                log.append("NO SUCH DEPARTMENT WITH ID "+department);
+                AdmissionLogger.logError(log.toString());
+                throw new NoProgramFoundException("NO SUCH DEPARTMENT WITH ID "+department+".");
+            }
+            DepartmentEntity departmentEntity = modelMapper.map(departmentDTO, DepartmentEntity.class);
+            List<ProgramEntity> programs = programRepository.findByDepartment(departmentEntity);
             List<ProgramDTO> response = new ArrayList<>();
             for (ProgramEntity program : programs) {
                 response.add(modelMapper.map(program, ProgramDTO.class));
@@ -57,6 +64,7 @@ public class UniversityProgramService implements ProgramService {
         StringBuilder log = new StringBuilder("PROGRAM FETCHED :-> ");
         if (program == null) {
             log.append("NO SUCH PROGRAM WITH ID "+id);
+            AdmissionLogger.logError(log.toString());
             throw new NoProgramFoundException("NO SUCH PROGRAM WIH ID "+id+".");
         }
         AdmissionLogger.logInfo(log.toString());
@@ -65,14 +73,14 @@ public class UniversityProgramService implements ProgramService {
 
     public ProgramDTO createProgram(CreateProgramDTO createProgramDTO) throws BadRequestException {
         StringBuilder log = new StringBuilder("PROGRAM CREATED :-> ");
-        if(createProgramDTO.getName() == null || createProgramDTO.getDepartmentID() == 0) {
+        if(createProgramDTO.getName() == null || createProgramDTO.getDepartment() == null) {
             log.append("BAD REQUEST :-> ");
             StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
             if(createProgramDTO.getName() == null) {
                 log.append(" PROGRAM NAME NOT FOUND ");
                 message.append(" PROGRAM NAME NOT FOUND ");
             }
-            if (createProgramDTO.getDepartmentID() == 0) {
+            if (createProgramDTO.getDepartment() == null) {
                 log.append(" DEPARTMENT NOT FOUND ");
                 message.append(" DEPARTMENT NOT FOUND ");
             }
@@ -89,28 +97,37 @@ public class UniversityProgramService implements ProgramService {
         StringBuilder log = new StringBuilder("PROGRAM UPDATED :-> ");
         if (programID == null) {
             log.append("BAD REQUEST :-> ");
+            AdmissionLogger.logError(log.toString());
             throw new BadRequestException("BAD REQUEST :-> PROGRAM ID NOT FOUND.");
         }
         ProgramEntity program = programRepository.findByProgramID(programID);
-        log.append("PROGRAM ID "+programID+" :-> ");
+        log.append("PROGRAM ID ").append(programID).append(" :-> ");
         if (program == null) {
-            log.append("NO SUCH PROGRAM WITH ID "+programID);
+            log.append("NO SUCH PROGRAM WITH ID ").append(programID);
+            AdmissionLogger.logError(log.toString());
             throw new NoProgramFoundException("NO SUCH PROGRAM WIH ID "+programID+".");
         }
         if (updateProgramDTO.getName() != null) {
-            log.append("NAME UPDATED TO "+updateProgramDTO.getName());
+            log.append("NAME UPDATED TO ").append(updateProgramDTO.getName());
             program.setName(updateProgramDTO.getName());
         }
         if (updateProgramDTO.getDepartmentID() != null) {
-            log.append("DEPARTMENT UPDATED TO "+updateProgramDTO.getDepartmentID());
-            program.setDepartmentID(updateProgramDTO.getDepartmentID());
+            ProgramDTO programDTO = getProgramById(programID);
+            if (programDTO == null) {
+                log.append("NO SUCH PROGRAM WITH ID ").append(programID);
+                AdmissionLogger.logError(log.toString());
+                throw new NoProgramFoundException("NO SUCH PROGRAM WIH ID "+programID+".");
+            }
+            ProgramEntity programEntity = modelMapper.map(programDTO, ProgramEntity.class);
+            program.setDepartment(programEntity.getDepartment());
+            log.append("DEPARTMENT UPDATED TO ").append(updateProgramDTO.getDepartmentID());
         }
         if (updateProgramDTO.getDegreeLevel() != null) {
-            log.append("DEGREE LEVEL UPDATED TO "+updateProgramDTO.getDegreeLevel());
+            log.append("DEGREE LEVEL UPDATED TO ").append(updateProgramDTO.getDegreeLevel());
             program.setName(updateProgramDTO.getName());
         }
         if (updateProgramDTO.getDuration() != null) {
-            log.append("DURATION UPDATED TO "+updateProgramDTO.getDuration());
+            log.append("DURATION UPDATED TO ").append(updateProgramDTO.getDuration());
             program.setDuration(updateProgramDTO.getDuration());
         }
         program = programRepository.save(program);
@@ -122,7 +139,8 @@ public class UniversityProgramService implements ProgramService {
         ProgramEntity program = programRepository.findByProgramID(programID);
         StringBuilder log = new StringBuilder("PROGRAM DELETED :-> ");
         if (program == null) {
-            log.append("NO SUCH PROGRAM WITH ID "+programID);
+            log.append("NO SUCH PROGRAM WITH ID ").append(programID);
+            AdmissionLogger.logError(log.toString());
             throw new NoProgramFoundException("NO SUCH PROGRAM WIH ID "+programID+".");
         }
         programRepository.delete(program);

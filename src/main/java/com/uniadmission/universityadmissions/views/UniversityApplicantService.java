@@ -51,11 +51,13 @@ public class UniversityApplicantService implements ApplicantService{
         StringBuilder log = new StringBuilder("APPLICANT STATUS FETCHED :-> ");
         if (id == null) {
             log.append("BAD REQUEST :-> APPLICANT ID NOT FOUND ");
+            AdmissionLogger.logError(log.toString());
             throw new BadRequestException("BAD REQUEST :-> APPLICANT ID NOT FOUND");
         }
         ApplicantEntity applicant = modelMapper.map(getApplicantById(id), ApplicantEntity.class);
         if(applicant == null) {
-            log.append("NO SUCH APPLICANT WITH ID " + id);
+            log.append("NO SUCH APPLICANT WITH ID ").append(id);
+            AdmissionLogger.logError(log.toString());
             throw new NoApplicantFoundException("NO SUCH APPLICANT WITH ID " + id);
         };
         AdmissionLogger.logInfo(log.toString());
@@ -133,9 +135,15 @@ public class UniversityApplicantService implements ApplicantService{
     }
 
     public ApplicantDTO deleteApplicant(Long applicantID) throws BadRequestException,NoApplicantFoundException {
-        if(applicantID==null) throw new BadRequestException("BAD REQUEST :-> ADMISSION ID NOT FOUND");
+        StringBuilder log = new StringBuilder("APPLICANT DELETED :-> ");
+        if(applicantID==null) {
+            AdmissionLogger.logError(log.toString());
+            throw new BadRequestException("BAD REQUEST :-> ADMISSION ID NOT FOUND");
+        }
         ApplicantDTO applicantDTO = getApplicantById(applicantID);
         if(applicantDTO==null) {
+            log.append("NO SUCH APPLICANT WITH ID ").append(applicantID);
+            AdmissionLogger.logError(log.toString());
             throw new NoApplicantFoundException("NO SUCH APPLICANT WITH ID "+applicantID+".");
         }
         ApplicantEntity applicant = modelMapper.map(applicantDTO,ApplicantEntity.class);
@@ -144,12 +152,23 @@ public class UniversityApplicantService implements ApplicantService{
     }
 
     public ApplicantDTO updateApplicantStatus(Long applicantID, UpdateApplicantAdmissionStatusDTO updateApplicantAdmissionStatusDTO) throws BadRequestException,NoApplicantFoundException {
-        if (applicantID == null) throw new BadRequestException("BAD REQUEST :-> APPLICANT ID NOT FOUND ");
+        StringBuilder log = new StringBuilder("APPLICANT STATUS UPDATED :-> ");
+        if (applicantID == null) {
+            log.append("BAD REQUEST :-> ");
+            AdmissionLogger.logError(log.toString());
+            throw new BadRequestException("BAD REQUEST :-> APPLICANT ID NOT FOUND ");
+        }
         if (updateApplicantAdmissionStatusDTO.getAppplicationStatus() == null) {
+            log.append("BAD REQUEST :-> ");
+            AdmissionLogger.logError(log.toString());
             throw new BadRequestException("BAD REQUEST :-> ADMISSION STATUS NOT FOUND");
         }
         ApplicantDTO applicantDTO = getApplicantById(applicantID);
-        if (applicantDTO == null) throw new NoApplicantFoundException("NO SUCH APPLICANT WITH ID" + applicantID);
+        if (applicantDTO == null) {
+            log.append("NO SUCH APPLICANT WITH ID ").append(applicantID);
+            AdmissionLogger.logError(log.toString());
+            throw new NoApplicantFoundException("NO SUCH APPLICANT WITH ID" + applicantID);
+        }
         ApplicantEntity applicant = modelMapper.map(applicantDTO, ApplicantEntity.class);
         applicant.setAppplicationStatus(updateApplicantAdmissionStatusDTO.getAppplicationStatus());
         return modelMapper.map(applicantRepository.save(applicant), ApplicantDTO.class);

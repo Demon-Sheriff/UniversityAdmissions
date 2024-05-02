@@ -37,7 +37,8 @@ public class UniversityDepartmentService implements DepartmentService {
         StringBuilder log = new StringBuilder("DEPARTMENT FETCHED :-> ");
         DepartmentEntity department = departmentRepository.findByDepartmentID(departmentID);
         if(department == null) {
-            log.append("NO SUCH DEPARTMENT WITH ID "+departmentID);
+            log.append("NO SUCH DEPARTMENT WITH ID ").append(departmentID);
+            AdmissionLogger.logError(log.toString());
             throw new NoDepartmentFoundException("NO SUCH DEPARTMENT WITH ID "+departmentID+".");
         }
         AdmissionLogger.logInfo(log.toString());
@@ -57,6 +58,7 @@ public class UniversityDepartmentService implements DepartmentService {
                 log.append(" DEPARTMENT DESCRIPTION NOT FOUND ");
                 message.append(" DEPARTMENT DESCRIPTION NOT FOUND ");
             };
+            AdmissionLogger.logError(log.toString());
             throw new BadRequestException(message.toString());
         }
         DepartmentEntity department = new DepartmentEntity(createDepartmentDTO);
@@ -70,14 +72,14 @@ public class UniversityDepartmentService implements DepartmentService {
         DepartmentEntity currentDepartment = modelMapper.map(getDepartmentByID(departmentID), DepartmentEntity.class);
         StringBuilder log = new StringBuilder("DEPARTMENT UPDATED :-> ");
         if(updateDepartmentDTO.getName() != null) {
-            log.append("NAME UPDATED TO "+updateDepartmentDTO.getName());
+            log.append("NAME UPDATED TO ").append(updateDepartmentDTO.getName());
             currentDepartment.setName(updateDepartmentDTO.getName());
         }
         else{
             log.append("NAME NOT UPDATED ");
         }
         if(updateDepartmentDTO.getDescription() != null) {
-            log.append("DESCRIPTION UPDATED TO "+updateDepartmentDTO.getDescription());
+            log.append("DESCRIPTION UPDATED TO ").append(updateDepartmentDTO.getDescription());
             currentDepartment.setDescription(updateDepartmentDTO.getDescription());
         }
         else {
@@ -92,12 +94,14 @@ public class UniversityDepartmentService implements DepartmentService {
         StringBuilder log = new StringBuilder("");
         if(departmentID == null) {
             log.append("BAD REQUEST :-> DEPARTMENT ID NOT FOUND ");
+            AdmissionLogger.logError(log.toString());
             throw new BadRequestException("BAD REQUEST :-> DEPARTMENT ID NOT FOUND");
         };
         DepartmentDTO departmentDTO = getDepartmentByID(departmentID);
-        log.append("DEPARTMENT DELETED :-> "+departmentDTO.getName());
+        log.append("DEPARTMENT DELETED :-> ").append(departmentDTO.getName());
         if (departmentDTO == null) {
             log.append("NO SUCH DEPARTMENT WITH WITH GIVEN ID "+departmentID);
+            AdmissionLogger.logError(log.toString());
             throw new NoDepartmentFoundException("NO SUCH DEPARTMENT WITH WITH GIVEN ID "+departmentID);
         }
         // map the DTO to the entity class
