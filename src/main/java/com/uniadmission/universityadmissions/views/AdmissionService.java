@@ -3,7 +3,6 @@ package com.uniadmission.universityadmissions.views;
 import com.uniadmission.universityadmissions.exceptions.BadRequestException;
 import com.uniadmission.universityadmissions.exceptions.NoProgramFoundException;
 import com.uniadmission.universityadmissions.exceptions.admissionExceptions.NoAdmissionFoundException;
-import com.uniadmission.universityadmissions.models.AdmissionEntity;
 import com.uniadmission.universityadmissions.models.DTO.admission.AdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.CreateAdmissionDTO;
 import com.uniadmission.universityadmissions.models.DTO.admission.UpdateAdmissionDTO;
