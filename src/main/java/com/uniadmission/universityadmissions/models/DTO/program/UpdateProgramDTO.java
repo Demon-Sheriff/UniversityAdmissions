@@ -7,8 +7,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateProgramDTO {
-    private String name;
-    private Long departmentID;
-    private DegreeLevel degreeLevel;
-    private Integer duration;
+
+	private String name;
+
+	private Long departmentID;
+
+	private DegreeLevel degreeLevel;
+
+	private Integer duration;
+
 }

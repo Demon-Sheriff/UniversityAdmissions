@@ -1,6 +1,8 @@
 package com.uniadmission.universityadmissions.models.DTO.admission;
 
+import com.uniadmission.universityadmissions.models.ApplicantEntity;
 import com.uniadmission.universityadmissions.models.CustomStatus.AdmissionStatus;
+import com.uniadmission.universityadmissions.models.ProgramEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -15,9 +17,15 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdmissionDTO {
-    private Long admissionID;
-    private Long applicant;
-    private Long program;
-    private AdmissionStatus admissionStatus;
-    private Date decisionDate;
+
+	private Long admissionID;
+
+	private ApplicantEntity applicant;
+
+	private ProgramEntity program;
+
+	private AdmissionStatus admissionStatus;
+
+	private Date decisionDate;
+
 }

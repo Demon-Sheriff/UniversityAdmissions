@@ -12,8 +12,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateApplicantDTO {
-    private String name;
-    private String address;
-    private String email;
-    private Date dateOfBirth;
+
+	private String name;
+
+	private String address;
+
+	private String email;
+
+	private Date dateOfBirth;
+
 }

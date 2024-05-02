@@ -1,4 +1,5 @@
 package com.uniadmission.universityadmissions.controllers;
+
 import java.util.*;
 
 import com.uniadmission.universityadmissions.models.DTO.department.CreateDepartmentDTO;
@@ -8,42 +9,46 @@ import com.uniadmission.universityadmissions.views.UniversityDepartmentService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v0/department")
+@RequestMapping("/api/v0/departments")
 public class DepartmentController {
 
-    private final UniversityDepartmentService departmentService;
+	private final UniversityDepartmentService departmentService;
 
-    public DepartmentController(UniversityDepartmentService departmentService) {
-        this.departmentService = departmentService;
-    }
+	public DepartmentController(UniversityDepartmentService departmentService) {
+		this.departmentService = departmentService;
+	}
 
-    @GetMapping("")
-    public List<DepartmentDTO> getAllDepartments(){
-        return departmentService.getAllDepartments();
-    }
-    @GetMapping("/{departmentID}")
-    public DepartmentDTO getDepartmentByID(@PathVariable Long departmentID) {
-        return departmentService.getDepartmentByID(departmentID);
-    }
+	@GetMapping("")
+	public List<DepartmentDTO> getAllDepartments() {
+		return departmentService.getAllDepartments();
+	}
 
-    @PostMapping("")
-    public DepartmentDTO createDepartment(@RequestBody CreateDepartmentDTO createDepartmentDTO) {
-        return departmentService.createDepartment(createDepartmentDTO);
-    }
+	@GetMapping("/{departmentID}")
+	public DepartmentDTO getDepartmentByID(@PathVariable Long departmentID) {
+		return departmentService.getDepartmentByID(departmentID);
+	}
 
-    @PutMapping("/{departmentID}")
-    public DepartmentDTO updateDepartment(@PathVariable Long departmentID, @RequestBody UpdateDepartmentDTO updateDepartmentDTO) {
-        return departmentService.updateDepartment(departmentID, updateDepartmentDTO);
-    }
+	@PostMapping("")
+	public DepartmentDTO createDepartment(@RequestBody CreateDepartmentDTO createDepartmentDTO) {
+		return departmentService.createDepartment(createDepartmentDTO);
+	}
 
-//    @PutMapping("/{departmentID}/updateStatus")
-//    public DepartmentDTO updateDepartmentStatus(@PathVariable Long departmentID, @RequestBody UpdateDepartmentStatusDTO updateDepartmentStatusDTO) {
-//        return departmentService.updateDepartmentStatus(departmentID, updateDepartmentStatusDTO);
-//    }
+	@PutMapping("/{departmentID}")
+	public DepartmentDTO updateDepartment(@PathVariable Long departmentID,
+			@RequestBody UpdateDepartmentDTO updateDepartmentDTO) {
+		return departmentService.updateDepartment(departmentID, updateDepartmentDTO);
+	}
 
-    @DeleteMapping("/{departmentID}")
-    public DepartmentDTO deleteDepartment(@PathVariable Long departmentID) {
-        return departmentService.deleteDepartment(departmentID);
-    }
+	// @PutMapping("/{departmentID}/updateStatus")
+	// public DepartmentDTO updateDepartmentStatus(@PathVariable Long departmentID,
+	// @RequestBody UpdateDepartmentStatusDTO updateDepartmentStatusDTO) {
+	// return departmentService.updateDepartmentStatus(departmentID,
+	// updateDepartmentStatusDTO);
+	// }
+
+	@DeleteMapping("/{departmentID}")
+	public DepartmentDTO deleteDepartment(@PathVariable Long departmentID) {
+		return departmentService.deleteDepartment(departmentID);
+	}
 
 }

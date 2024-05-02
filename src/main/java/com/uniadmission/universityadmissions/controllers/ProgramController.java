@@ -10,42 +10,44 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v0/program")
+@RequestMapping("/api/v0/programs")
 public class ProgramController {
-    private final UniversityProgramService programService;
 
-    public ProgramController(UniversityProgramService programService) {
-        this.programService = programService;
-    }
-    @GetMapping("")
-    public List<ProgramDTO> getAllPrograms(
-            @RequestParam(name = "department", defaultValue = "-1") Long departmentID
-    ){
-        Long department = -1L;
-        if(departmentID != null) {
-            department = departmentID;
-        }
-        return programService.getAllPrograms(department);
-    }
+	private final UniversityProgramService programService;
 
-    @GetMapping("/{programID}")
-    public ProgramDTO getProgramByID(@PathVariable Long programID) throws NoProgramFoundException {
-        return programService.getProgramById(programID);
-    }
+	public ProgramController(UniversityProgramService programService) {
+		this.programService = programService;
+	}
 
+	@GetMapping("")
+	public List<ProgramDTO> getAllPrograms(@RequestParam(name = "department", defaultValue = "-1") Long departmentID)
+			throws NoProgramFoundException {
+		Long department = -1L;
+		if (departmentID != null) {
+			department = departmentID;
+		}
+		return programService.getAllPrograms(department);
+	}
 
-    @PostMapping("")
-    public ProgramDTO createProgram(@RequestBody CreateProgramDTO createProgramDTO) {
-        return programService.createProgram(createProgramDTO);
-    }
+	@GetMapping("/{programID}")
+	public ProgramDTO getProgramByID(@PathVariable Long programID) throws NoProgramFoundException {
+		return programService.getProgramById(programID);
+	}
 
-    @PutMapping("/{programID}")
-    public ProgramDTO updateProgram(@PathVariable Long programID, @RequestBody UpdateProgramDTO updateProgramDTO) throws NoProgramFoundException {
-        return programService.updateProgram(programID, updateProgramDTO);
-    }
+	@PostMapping("")
+	public ProgramDTO createProgram(@RequestBody CreateProgramDTO createProgramDTO) throws NoProgramFoundException {
+		return programService.createProgram(createProgramDTO);
+	}
 
-    @DeleteMapping("/{programID}")
-    public ProgramDTO deleteProgram(@PathVariable Long programID) throws NoProgramFoundException {
-        return programService.deleteProgram(programID);
-    }
+	@PutMapping("/{programID}")
+	public ProgramDTO updateProgram(@PathVariable Long programID, @RequestBody UpdateProgramDTO updateProgramDTO)
+			throws NoProgramFoundException {
+		return programService.updateProgram(programID, updateProgramDTO);
+	}
+
+	@DeleteMapping("/{programID}")
+	public ProgramDTO deleteProgram(@PathVariable Long programID) throws NoProgramFoundException {
+		return programService.deleteProgram(programID);
+	}
+
 }

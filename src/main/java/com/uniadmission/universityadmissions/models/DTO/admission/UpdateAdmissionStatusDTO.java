@@ -7,5 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateAdmissionStatusDTO {
-    private AdmissionStatus admissionStatus;
+
+	private AdmissionStatus admissionStatus;
+
 }

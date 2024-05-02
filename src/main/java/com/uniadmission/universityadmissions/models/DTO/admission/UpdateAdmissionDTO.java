@@ -9,5 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class UpdateAdmissionDTO {
-    private Long program;
+
+	private Long program;
+
 }

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -14,18 +16,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DepartmentEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long departmentID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "department_id", nullable = false)
+	private long departmentID;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @Column(name = "description", nullable = false)
-    private String description;
+	@Column(name = "description", nullable = false)
+	private String description;
 
-    public DepartmentEntity(CreateDepartmentDTO createDepartmentDTO) {
-        this.setName(createDepartmentDTO.getName());
-        this.setDescription(createDepartmentDTO.getDescription());
-    }
+	public DepartmentEntity(CreateDepartmentDTO createDepartmentDTO) {
+		this.setName(createDepartmentDTO.getName());
+		this.setDescription(createDepartmentDTO.getDescription());
+	}
+
 }

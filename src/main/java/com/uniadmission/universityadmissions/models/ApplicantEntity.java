@@ -21,6 +21,7 @@ public class ApplicantEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "applicant_id", nullable = false)
 	private long applicantID;
 
 	@Column(name = "name", nullable = false)
