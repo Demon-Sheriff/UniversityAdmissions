@@ -25,84 +25,98 @@ import java.util.List;
 @Service
 public class UniversityAdmissionService implements AdmissionService {
 
-	private final AdmissionRepository admissionRepository;
+    private final AdmissionRepository admissionRepository;
 
-	private final ProgramService programService;
+    private final ProgramService programService;
 
-	private final ApplicantService applicantService;
+    private final ApplicantService applicantService;
 
-	private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-	UniversityAdmissionService(AdmissionRepository admissionRepository, ProgramService programService,
-			ApplicantService applicantService) {
-		this.admissionRepository = admissionRepository;
-		this.programService = programService;
-		this.applicantService = applicantService;
-		this.modelMapper = new ModelMapper();
-	}
+    UniversityAdmissionService(AdmissionRepository admissionRepository, ProgramService programService,
+        ApplicantService applicantService) {
+      this.admissionRepository = admissionRepository;
+      this.programService = programService;
+      this.applicantService = applicantService;
+      this.modelMapper = new ModelMapper();
+    }
+    public List<AdmissionDTO> getAllAdmissions(){
+        StringBuilder log = new StringBuilder("ALL ADMISSIONS FETCHED :-> ");
+        List<AdmissionEntity> admissions = admissionRepository.findAll();
+        List<AdmissionDTO> response = new ArrayList<>();
+        for (AdmissionEntity admission : admissions) {
+            response.add(modelMapper.map(admission, AdmissionDTO.class));
+        }
+        AdmissionLogger.logInfo(log.toString());
+        return response;
+    }
 
-	public List<AdmissionDTO> getAllAdmissions() {
-		List<AdmissionEntity> admissions = admissionRepository.findAll();
-		List<AdmissionDTO> response = new ArrayList<>();
-		for (AdmissionEntity admission : admissions) {
-			response.add(modelMapper.map(admission, AdmissionDTO.class));
-		}
-		return response;
-	}
+    public AdmissionDTO getAdmissionById(Long id) throws NoAdmissionFoundException {
+        StringBuilder log = new StringBuilder("ADMISSION FETCHED :-> ");
+        AdmissionEntity admission = admissionRepository.getByAdmissionID(id);
+        if (admission == null) {
+            log.append("NO SUCH ADMISSION WITH ID "+id);
+            throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID "+id+".");
+        }
+        AdmissionLogger.logInfo(log.toString());
+        return modelMapper.map(admission, AdmissionDTO.class);
+    }
 
-	public AdmissionDTO getAdmissionById(Long id) throws NoAdmissionFoundException {
-		AdmissionEntity admission = admissionRepository.getByAdmissionID(id);
-		if (admission == null) {
-			throw new NoAdmissionFoundException("NO SUCH ADMISSION WITH ID " + id + ".");
-		}
-		return modelMapper.map(admission, AdmissionDTO.class);
-	}
+    public AdmissionDTO createAdmission(CreateAdmissionDTO createAdmissionDTO) throws BadRequestException {
+        StringBuilder log = new StringBuilder("ADMISSION CREATED :-> ");
+        if(createAdmissionDTO.getApplicant() == null || createAdmissionDTO.getProgram() == null) {
+            log.append("BAD REQUEST :-> ");
+            StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
+            if(createAdmissionDTO.getApplicant() == null) {
+                log.append(" APPLICANT NOT FOUND ");
+                message.append(" APPLICANT NOT FOUND ");
+            }
+            if (createAdmissionDTO.getProgram() == null) {
+                log.append(" PROGRAM NOT FOUND ");
+                message.append(" PROGRAM NOT FOUND ");
+            }
+            AdmissionLogger.logError(log.toString());
+            throw new BadRequestException(message.toString());
+        }
 
-	public AdmissionDTO createAdmission(CreateAdmissionDTO createAdmissionDTO)
-			throws BadRequestException, NoProgramFoundException {
-		if (createAdmissionDTO.getApplicant() == null || createAdmissionDTO.getProgram() == null) {
-			StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
-			if (createAdmissionDTO.getApplicant() == null)
-				message.append(" APPLICANT NOT FOUND ");
-			if (createAdmissionDTO.getProgram() == null)
-				message.append(" PROGRAM NOT FOUND ");
-			throw new BadRequestException(message.toString());
-		}
-		AdmissionEntity admission = new AdmissionEntity();
-		ApplicantDTO applicant = applicantService.getApplicantById(createAdmissionDTO.getApplicant());
-		if (applicant == null) {
-			throw new BadRequestException("APPLICANT NOT FOUND");
-		}
-		admission.setApplicant(modelMapper.map(applicant, ApplicantEntity.class));
-		ProgramDTO program = programService.getProgramById(createAdmissionDTO.getProgram());
-		if (program == null) {
-			throw new NoProgramFoundException("PROGRAM NOT FOUND");
-		}
-		admission.setProgram(modelMapper.map(program, ProgramEntity.class));
-		admission = admissionRepository.save(admission);
-		return modelMapper.map(admission, AdmissionDTO.class);
-	}
+        AdmissionEntity admission = new AdmissionEntity(createAdmissionDTO);
+        log.append("APPLICANT : "+createAdmissionDTO.getApplicant().getApplicantID());
+        System.out.println(createAdmissionDTO.getApplicant());
+        admission = admissionRepository.save(admission);
+        AdmissionLogger.logSuccess(log.toString());
+        return modelMapper.map(admission, AdmissionDTO.class);
+    }
 
-	public AdmissionDTO updateAdmission(Long admissionID, UpdateAdmissionDTO updateAdmissionDTO)
-			throws BadRequestException, NoProgramFoundException {
-		if (admissionID == null || updateAdmissionDTO.getProgram() == null) {
-			StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
-			if (admissionID == null)
-				message.append(" ADMISSION ID NOT FOUND ");
-			if (updateAdmissionDTO.getProgram() == null)
-				message.append(" PROGRAM ID NOT FOUND");
-			throw new BadRequestException(message.toString());
-		}
-		AdmissionDTO admission = new AdmissionDTO();
-		AdmissionEntity currentAdmission = modelMapper.map(getAdmissionById(admissionID), AdmissionEntity.class);
-		if (updateAdmissionDTO.getProgram() != null) {
-			ProgramDTO programEntity = programService.getProgramById(updateAdmissionDTO.getProgram());
-			ProgramEntity program = modelMapper.map(programEntity, ProgramEntity.class);
-			currentAdmission.setProgram(program);
-		}
-		currentAdmission = admissionRepository.save(currentAdmission);
-		return modelMapper.map(currentAdmission, AdmissionDTO.class);
-	}
+    public AdmissionDTO updateAdmission(Long admissionID, UpdateAdmissionDTO updateAdmissionDTO) throws BadRequestException{
+        StringBuilder log = new StringBuilder("ADMISSION UPDATED :-> ");
+        if (admissionID == null || updateAdmissionDTO.getProgram() == null) {
+            log.append("BAD REQUEST :-> ");
+            StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
+            if (admissionID == null) {
+                log.append(" ADMISSION ID NOT FOUND ");
+                message.append(" ADMISSION ID NOT FOUND ");
+            }
+            if (updateAdmissionDTO.getProgram() == null) {
+                log.append(" PROGRAM ID NOT FOUND ");
+                message.append(" PROGRAM ID NOT FOUND");
+            }
+            AdmissionLogger.logError(log.toString());
+            throw new BadRequestException(message.toString());
+        }
+        AdmissionDTO admission = new AdmissionDTO();
+        log.append("ADMISSION ID : "+admissionID);
+        AdmissionEntity currentAdmission = modelMapper.map(getAdmissionById(admissionID), AdmissionEntity.class);
+        log.append("PROGRAM : "+updateAdmissionDTO.getProgram().getProgramID());
+        if(updateAdmissionDTO.getProgram() != null) {
+            log.append("PROGRAM : "+updateAdmissionDTO.getProgramID());
+            currentAdmission.setProgram(updateAdmissionDTO.getProgram());
+        }else {
+            log.append("PROGRAM NOT FOUND ");
+        }
+        currentAdmission = admissionRepository.save(currentAdmission);
+        log.append("ADMISSION UPDATED ");
+        return modelMapper.map(currentAdmission, AdmissionDTO.class);
+    }
 
 	public AdmissionDTO deleteAdmission(Long admissionID) throws BadRequestException, NoAdmissionFoundException {
 		if (admissionID == null)
