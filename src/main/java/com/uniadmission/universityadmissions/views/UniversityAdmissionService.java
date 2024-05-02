@@ -93,7 +93,7 @@ public class UniversityAdmissionService implements AdmissionService {
             log.append("BAD REQUEST :-> ");
             StringBuilder message = new StringBuilder("BAD REQUEST :-> ");
             if (admissionID == null) {
-                log.append(" ADMISSION ID NOT FOUND ");
+                log.append(" ADMISSIsON ID NOT FOUND ");
                 message.append(" ADMISSION ID NOT FOUND ");
             }
             if (updateAdmissionDTO.getProgram() == null) {
