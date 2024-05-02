@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProgramRepository extends JpaRepository<ProgramEntity, Integer> {
+public interface ProgramRepository extends JpaRepository<ProgramEntity, Long> {
 
 	ProgramEntity findByProgramID(Long programID);
 
