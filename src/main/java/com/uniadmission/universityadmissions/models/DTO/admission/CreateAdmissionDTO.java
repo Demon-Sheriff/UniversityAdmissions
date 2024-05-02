@@ -12,16 +12,15 @@ import org.antlr.v4.runtime.misc.NotNull;
 @AllArgsConstructor
 public class CreateAdmissionDTO {
 
-    @NotNull
-    private Long applicant;
-    @NotNull
-    private Long program;
+	@NotNull
+	private Long applicant;
 
-    @Override
-    public String toString() {
-        return "CreateAdmissionDTO{" +
-                "applicant=" + applicant +
-                ", program=" + program +
-                '}';
-    }
+	@NotNull
+	private Long program;
+
+	@Override
+	public String toString() {
+		return "CreateAdmissionDTO{" + "applicant=" + applicant + ", program=" + program + '}';
+	}
+
 }

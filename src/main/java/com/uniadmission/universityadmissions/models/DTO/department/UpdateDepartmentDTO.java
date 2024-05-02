@@ -10,6 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateDepartmentDTO {
-    private String name;
-    private String description;
+
+	private String name;
+
+	private String description;
+
 }

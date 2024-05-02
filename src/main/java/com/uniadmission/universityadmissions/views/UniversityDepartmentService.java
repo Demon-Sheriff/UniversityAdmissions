@@ -15,13 +15,13 @@ import java.util.*;
 public class UniversityDepartmentService implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
+
     private final ModelMapper modelMapper;
-
+    
     public UniversityDepartmentService(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
-        this.modelMapper = new ModelMapper();
+      this.departmentRepository = departmentRepository;
+      this.modelMapper = new ModelMapper();
     }
-
     public List<DepartmentDTO> getAllDepartments() {
         StringBuilder log = new StringBuilder("ALL DEPARTMENTS FETCHED :-> ");
         List<DepartmentEntity> departments = departmentRepository.findAll();

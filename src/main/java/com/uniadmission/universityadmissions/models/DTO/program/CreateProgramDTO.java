@@ -1,6 +1,7 @@
 package com.uniadmission.universityadmissions.models.DTO.program;
 
 import com.uniadmission.universityadmissions.models.CustomStatus.DegreeLevel;
+import com.uniadmission.universityadmissions.models.DepartmentEntity;
 import lombok.*;
 
 @Getter
@@ -8,12 +9,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProgramDTO {
-    @NonNull
-    private String name;
-    @NonNull
-    private Long departmentID;
-    @NonNull
-    private DegreeLevel degreeLevel;
-    @NonNull
-    private Integer duration;
+
+	private String name;
+
+	private Long department;
+
+	private DegreeLevel degreeLevel;
+
+	private Integer duration;
+
 }

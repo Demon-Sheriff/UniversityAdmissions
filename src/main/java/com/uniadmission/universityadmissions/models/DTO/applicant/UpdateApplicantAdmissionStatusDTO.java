@@ -11,5 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateApplicantAdmissionStatusDTO {
-    private AppplicationStatus appplicationStatus;
+
+	private AppplicationStatus appplicationStatus;
+
 }

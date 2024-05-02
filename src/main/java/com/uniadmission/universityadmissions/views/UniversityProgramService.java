@@ -2,9 +2,11 @@ package com.uniadmission.universityadmissions.views;
 
 import com.uniadmission.universityadmissions.exceptions.BadRequestException;
 import com.uniadmission.universityadmissions.exceptions.NoProgramFoundException;
+import com.uniadmission.universityadmissions.models.DTO.department.DepartmentDTO;
 import com.uniadmission.universityadmissions.models.DTO.program.CreateProgramDTO;
 import com.uniadmission.universityadmissions.models.DTO.program.ProgramDTO;
 import com.uniadmission.universityadmissions.models.DTO.program.UpdateProgramDTO;
+import com.uniadmission.universityadmissions.models.DepartmentEntity;
 import com.uniadmission.universityadmissions.models.ProgramEntity;
 import com.uniadmission.universityadmissions.repositories.ProgramRepository;
 import org.modelmapper.ModelMapper;
@@ -15,13 +17,19 @@ import java.util.List;
 
 @Service
 public class UniversityProgramService implements ProgramService {
-    private final ProgramRepository programRepository;
-    private final ModelMapper modelMapper;
-    UniversityProgramService(ProgramRepository programRepository) {
-        this.programRepository = programRepository;
-        this.modelMapper = new ModelMapper();
-    }
+  
+  	private final ProgramRepository programRepository;
 
+    private final DepartmentService departmentService;
+
+    private final ModelMapper modelMapper;
+
+    UniversityProgramService(ProgramRepository programRepository, DepartmentService departmentService) {
+      this.programRepository = programRepository;
+      this.departmentService = departmentService;
+      this.modelMapper = new ModelMapper();
+    }
+  
     public List<ProgramDTO> getAllPrograms(Long department){
         StringBuilder log = new StringBuilder("");
         log.append("ALL PROGRAMS FETCHED :-> ");

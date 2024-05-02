@@ -15,10 +15,17 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplicantDTO {
-    private long applicantID;
-    private String name;
-    private String address;
-    private String email;
-    private Date dateOfBirth;
-    private AppplicationStatus appplicationStatus;
+
+	private long applicantID;
+
+	private String name;
+
+	private String address;
+
+	private String email;
+
+	private Date dateOfBirth;
+
+	private AppplicationStatus appplicationStatus;
+
 }
